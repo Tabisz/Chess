@@ -14,7 +14,7 @@ namespace _Scripts.Units
     public class Unit : MonoBehaviour, ITileOccupier
     {
     
-        private UnitsController _playerUnitsController;
+        private UnitsController _unitsController;
         public UnitStatistics Statistics => statistics;    
         [SerializeField] private UnitStatistics statistics;
     
@@ -37,8 +37,8 @@ namespace _Scripts.Units
     
         public void Init(UnitsController unitsController, Fraction fraction, UnitStatistics stats, Material graphic, bool disableForNextTurn)
         {
-            _playerUnitsController = unitsController;
-            _playerUnitsController.RegisterToUnitsController(this);
+            _unitsController = unitsController;
+            _unitsController.RegisterToUnitsController(this);
             _fraction = fraction;
         
             statistics = stats;
@@ -61,17 +61,35 @@ namespace _Scripts.Units
         {
             return !_attackPerformed && !_movePerformed;
         }
+        
+        public Fraction GetOppositeFraction()
+        {
+            if (Fraction == Fraction.ENEMY)
+                return Fraction.PLAYER;
+            else
+                return Fraction.ENEMY;
+        }
+
+        public void SetWakeUp()
+        {
+            sleepIndicator.SetActive(false);
+        }
+
+        public void SetSleeping()
+        {
+            sleepIndicator.SetActive(true);
+        }
 
         public void SkipTurn()
         {
-            sleepIndicator.SetActive(true);
+            SetSleeping();
             _attackPerformed = true;
             _movePerformed = true;        
         }
 
         public void ResetTurn()
         {
-            sleepIndicator.SetActive(false);
+            SetWakeUp();
             _attackPerformed = false;
             _movePerformed = false;
         }
@@ -91,7 +109,7 @@ namespace _Scripts.Units
         
             StartCoroutine(SmoothLerp(statistics.MoveSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(tile), onPerformed));
 
-            _currentTile = tile;
+            _currentTile = tile;//TODO: move this to on performed function because it is firing to early
             _movePerformed = true;
             if(tile.CurrentTileOccipier == null)
                 tile.RegisterOccupier(this);
@@ -102,7 +120,7 @@ namespace _Scripts.Units
         {
             Debug.Log("ATTACK!!");
             StartCoroutine(SmoothLerpPingPong(statistics.AttackSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(unit.CurrentTile), onPerformed ));
-            unit.ReceiveDamage(statistics.Dmg);
+            unit.ReceiveDamage(statistics.Dmg);//TODO: move this to on performed function because it is firing to early
             _attackPerformed = true;
         }
         private void ReceiveDamage(int damageCount)
@@ -117,7 +135,7 @@ namespace _Scripts.Units
         {
             _currentTile.UnregisterOccupier();
             gameObject.SetActive(false);
-            _playerUnitsController.UnRegisterToUnitsController(this);
+            _unitsController.UnRegisterToUnitsController(this);
             GameController.Instance.GameplayRefsHolder.Observer.OnUnitDied?.Invoke(this);
         }
     
@@ -184,7 +202,6 @@ namespace _Scripts.Units
                 yield return null;
             }
             onPerformed?.Invoke();
-            sleepIndicator.SetActive(true);
             GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.RemoveInputLocker(this.name+"attack");
 
         }

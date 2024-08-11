@@ -10,11 +10,12 @@ namespace _Scripts.Utils
 
         public Action<Unit> OnUnitSelected;
         public Action<Unit> OnUnitSecondarySelected;
-
+        
         public Action<Unit> OnDamageReceived;
 
         public Action<Unit> OnUnitDied;
         public Action OnGameLost;
+        public Action OnGameWin;
 
         public Action OnNextMoveRequested;
         

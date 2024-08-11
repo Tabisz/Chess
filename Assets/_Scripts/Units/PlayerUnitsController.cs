@@ -58,9 +58,17 @@ namespace _Scripts.Units
                 }
         }
 
-        private void RefreshHighlightsWhenMovePerformed()
+        private void OnMovePerformed()
         {
-            GridManager.ShowRangesForUnit(_currentlySelectedUnit);
+            if (_currentlySelectedUnit)
+            {
+                GridManager.ShowRangesForUnit(_currentlySelectedUnit);
+                
+                if ( !_currentlySelectedUnit.CanPerformMove() && (!_currentlySelectedUnit.CanPerformAttack() || !GetOppositeUnitInAttackRange(_currentlySelectedUnit)))
+                    _currentlySelectedUnit.SetSleeping();
+            }
+            else
+                GridManager.RefreshGrid();
         }
     
         private bool TryMoveUnit(Unit unit, Tile tile)
@@ -68,7 +76,7 @@ namespace _Scripts.Units
             if ( unit.CanPerformMove() && unit.Fraction ==Fraction.PLAYER && GridManager.IsTileInRange(unit.CurrentTile, tile,
                     unit.Statistics.MoveRange))
             {
-                unit.MoveToTile(tile, RefreshHighlightsWhenMovePerformed);
+                unit.MoveToTile(tile, OnMovePerformed);
                 return true;
             }
             return false;
@@ -82,7 +90,7 @@ namespace _Scripts.Units
                     destinationUnit.CurrentTile,
                     sourceUnit.Statistics.AttackRange))
             {
-                sourceUnit.Attack(destinationUnit, RefreshHighlightsWhenMovePerformed);
+                sourceUnit.Attack(destinationUnit, OnMovePerformed);
                 return true;
             }
             return false;
@@ -100,7 +108,13 @@ namespace _Scripts.Units
         public bool HasAnyMoves()
         {
             //player may only end turn by clicking button
-            return true;
+
+            foreach (var unit in units)
+            {
+                if ( unit.CanPerformMove() || (unit.CanPerformAttack() && GetOppositeUnitInAttackRange(unit)))
+                    return true;
+            }
+            return false;
         }
 
         public void EndMyTurn()

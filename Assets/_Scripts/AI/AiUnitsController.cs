@@ -13,6 +13,9 @@ namespace _Scripts.AI
         {
             base.Init();
             TurnController.AiRegisterTurnProvider(this);
+            
+            Observer.OnUnitDied += CheckForGameWin;
+
         }
 
         public void StartMyTurn()
@@ -38,23 +41,19 @@ namespace _Scripts.AI
                 TryMoveTowardsClosestPlayer(unit);
                 MovePerformed?.Invoke();
             }
-            else
+            else// do nothing
             {
                 unit.SkipTurn();
                 _currentUnitMoving++;
                 MovePerformed?.Invoke();
             }
-        
-
         }
 
 
         private bool TryAttackIfInRange(Unit unit)
         {
-            Unit closestUnit = GetClosestUnit(unit);
-            var hasUnitInAttackRange = closestUnit!= null &&
-                                       GridManager.IsTileInRange(unit.CurrentTile, closestUnit.CurrentTile, unit.Statistics.AttackRange);
-            if (hasUnitInAttackRange)
+            var closestUnit = GetOppositeUnitInAttackRange(unit);
+            if (closestUnit)
             {
                 unit.Attack(closestUnit);
                 return true;
@@ -64,7 +63,7 @@ namespace _Scripts.AI
 
         private bool TryMoveTowardsClosestPlayer(Unit unit)
         {
-            var closestUnit = GetClosestUnit(unit);
+            Unit closestUnit = GetClosestUnit(unit, unit.GetOppositeFraction());
             Tile tile = null;
             if(closestUnit)
                 tile = GridManager.GetClosestFreeTileTowardsDestination(unit.CurrentTile, closestUnit.CurrentTile, unit.Statistics.MoveRange);
@@ -80,23 +79,6 @@ namespace _Scripts.AI
                 return false;
             }
         }
-
-        private Unit GetClosestUnit(Unit unit)
-        {
-            int min = int.MaxValue;
-            Unit closestUnit = null;
-            foreach (var playerUnit in GameController.Instance.GameplayRefsHolder.PlayerUnitsController.Units)
-            {
-                int distance = GridManager.GetDistance(unit.CurrentTile, playerUnit.CurrentTile);
-                if (distance < min)
-                {
-                    min = distance;
-                    closestUnit = playerUnit;
-                }
-            }
-
-            return closestUnit;
-        }
         public bool HasAnyMoves()
         {
             if (_currentUnitMoving > units.Count)
@@ -105,6 +87,14 @@ namespace _Scripts.AI
                 if (units[i].CanPerformAttack() || units[i].CanPerformMove())
                     return true;
             return false;
+        }
+        
+                
+        private void CheckForGameWin(Unit unit)
+        {
+            if(unit.Fraction == Fraction.ENEMY)
+                if(units.Count == 0)
+                    Observer.OnGameWin?.Invoke();
         }
 
         public void EndMyTurn()

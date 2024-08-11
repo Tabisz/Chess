@@ -21,6 +21,40 @@ namespace _Scripts.Units
             Observer = GameController.Instance.GameplayRefsHolder.Observer;
             GridManager = GameController.Instance.GameplayRefsHolder.GridManager;
         }
+        
+        protected Unit GetClosestUnit(Unit unit, Fraction FractionToFind)
+        {
+            int min = int.MaxValue;
+            Unit closestUnit = null;
+            List<Unit> UnitsCollection;
+            if (FractionToFind == Fraction.ENEMY)
+                UnitsCollection = GameController.Instance.GameplayRefsHolder.AiUnitsController.Units;
+            else
+                UnitsCollection = GameController.Instance.GameplayRefsHolder.PlayerUnitsController.Units;
+            
+            foreach (var otherUnit in UnitsCollection)
+            {
+                int distance = GridManager.GetDistance(unit.CurrentTile, otherUnit.CurrentTile);
+                if (distance < min)
+                {
+                    min = distance;
+                    closestUnit = unit;
+                }
+            }
+
+            return closestUnit;
+        }
+
+        protected Unit GetOppositeUnitInAttackRange(Unit unit)
+        {
+            
+            Unit closestUnit = GetClosestUnit(unit, unit.GetOppositeFraction());
+            if (closestUnit != null &&
+                GridManager.IsTileInRange(unit.CurrentTile, closestUnit.CurrentTile, unit.Statistics.AttackRange))
+                return closestUnit;
+            else
+                return null;
+        }
     
         public void RegisterToUnitsController(Unit unit)
         {
