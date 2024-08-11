@@ -57,15 +57,15 @@ public class MainMenuUIController : MonoBehaviour, ICustomInitializer
 
     public void SetEasyDifficulty()
     {
-        GameController.Instance.GlobalStatistics.SetDifficultySettings(DifficultySetting.EASY);
+        GameController.Instance.RuntimeDataHolder.SetDifficultySettings(DifficultySetting.EASY);
     }
     public void SetMediumDifficulty()
     {
-        GameController.Instance.GlobalStatistics.SetDifficultySettings(DifficultySetting.MEDIUM);
+        GameController.Instance.RuntimeDataHolder.SetDifficultySettings(DifficultySetting.MEDIUM);
     }
     public void SetHardDifficulty()
     {
-        GameController.Instance.GlobalStatistics.SetDifficultySettings(DifficultySetting.HARD);
+        GameController.Instance.RuntimeDataHolder.SetDifficultySettings(DifficultySetting.HARD);
     }
     public void Deinit()
     {

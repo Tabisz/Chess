@@ -14,13 +14,13 @@ public class EmemiesKilledView : View
     public override void Init()
     {
         base.Init();
-        GameController.Instance.gameplayRefsHolder.Observer.OnUnitDied += TryCountDead;
+        GameController.Instance.GameplayRefsHolder.Observer.OnUnitDied += TryCountDead;
     }
 
     public void TryCountDead(Unit unit)
     {
         if (unit.Fraction == Fraction.ENEMY)
-            killedText.text= "Enamies killed: "+GameController.Instance.GlobalStatistics.GetKilledCount();
+            killedText.text= "Enamies killed: "+GameController.Instance.RuntimeDataHolder.GetKilledCount();
 
     }
 }

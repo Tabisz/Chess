@@ -7,7 +7,8 @@ public class PlayerGameplayState : PlayerState
 {
     public override void Init()
     {
-        GameController.Instance.gameplayRefsHolder.InGameUIController.GetView(ViewType.TURN_VIEW).Show();
+        if(GameController.Instance.GameplayRefsHolder)
+        GameController.Instance.GameplayRefsHolder.InGameUIController.GetView(ViewType.TURN_VIEW).Show();
     }
 
     public override void Deinit()
@@ -17,18 +18,18 @@ public class PlayerGameplayState : PlayerState
 
     public override void GatherInput()
     {
-        if(GameController.Instance.gameplayRefsHolder.Player.PlayerInputLocker.IsLocked) return;
+        if(GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.IsLocked) return;
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            GameController.Instance.gameplayRefsHolder.Player.PlayerSM.ChangeState(new PlayerMenuState());
+            GameController.Instance.GameplayRefsHolder.Player.PlayerSM.ChangeState(new PlayerMenuState());
         }
         else if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            GameController.Instance.gameplayRefsHolder.Player.Raycaster.TryPrimaryInteract();
+            GameController.Instance.GameplayRefsHolder.Player.Raycaster.TryPrimaryInteract();
         }
         else if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            GameController.Instance.gameplayRefsHolder.Player.Raycaster.TrySecondaryInteract();
+            GameController.Instance.GameplayRefsHolder.Player.Raycaster.TrySecondaryInteract();
         }
     }
     
@@ -36,7 +37,7 @@ public class PlayerGameplayState : PlayerState
 
     public override void CustomUpdate()
     {
-        GameController.Instance.gameplayRefsHolder.Player.Raycaster.CustomUpdate();
+        GameController.Instance.GameplayRefsHolder.Player.Raycaster.CustomUpdate();
        GatherInput();
     }
 

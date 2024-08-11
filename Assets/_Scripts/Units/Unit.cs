@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Scripts.Units
 {
@@ -14,8 +15,8 @@ namespace _Scripts.Units
     {
     
         private UnitsController _playerUnitsController;
-        public UnitStatistics Statistics => _statistics;    
-        [SerializeField] private UnitStatistics _statistics;
+        public UnitStatistics Statistics => statistics;    
+        [SerializeField] private UnitStatistics statistics;
     
         public int CurrentHp => _currentHp;
         private int _currentHp;
@@ -40,8 +41,8 @@ namespace _Scripts.Units
             _playerUnitsController.RegisterToUnitsController(this);
             _fraction = fraction;
         
-            _statistics = stats;
-            _currentHp = _statistics.MaxHp;
+            statistics = stats;
+            _currentHp = statistics.MaxHp;
         
             myRenderer.material = graphic;
         
@@ -77,18 +78,18 @@ namespace _Scripts.Units
 
         public void SpawnAtTile(Tile tile)
         {
-            transform.position = GameController.Instance.gameplayRefsHolder.GridManager.GetPositionOfTile(tile);
+            transform.position = GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(tile);
             _currentTile = tile;
         
             if(tile.CurrentTileOccipier == null)
                 tile.RegisterOccupier(this);
         }
-        public void MoveToTile(Tile tile , Action OnPerformed = null )
+        public void MoveToTile(Tile tile , Action onPerformed = null )
         {
             if(_currentTile != null)
                 _currentTile.UnregisterOccupier();
         
-            StartCoroutine(SmoothLerp(_statistics.MoveSpeed,GameController.Instance.gameplayRefsHolder.GridManager.GetPositionOfTile(tile), OnPerformed));
+            StartCoroutine(SmoothLerp(statistics.MoveSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(tile), onPerformed));
 
             _currentTile = tile;
             _movePerformed = true;
@@ -97,17 +98,17 @@ namespace _Scripts.Units
         }
     
     
-        public void Attack( Unit unit, Action OnPerformed = null)
+        public void Attack( Unit unit, Action onPerformed = null)
         {
             Debug.Log("ATTACK!!");
-            StartCoroutine(SmoothLerpPingPong(_statistics.AttackSpeed,GameController.Instance.gameplayRefsHolder.GridManager.GetPositionOfTile(unit.CurrentTile), OnPerformed ));
-            unit.ReceiveDamage(_statistics.Dmg);
+            StartCoroutine(SmoothLerpPingPong(statistics.AttackSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(unit.CurrentTile), onPerformed ));
+            unit.ReceiveDamage(statistics.Dmg);
             _attackPerformed = true;
         }
         private void ReceiveDamage(int damageCount)
         {
             _currentHp -= damageCount;
-            GameController.Instance.gameplayRefsHolder.Observer.OnDamageReceived?.Invoke(this);
+            GameController.Instance.GameplayRefsHolder.Observer.OnDamageReceived?.Invoke(this);
         
             if(_currentHp<=0)
                 Die();
@@ -117,18 +118,18 @@ namespace _Scripts.Units
             _currentTile.UnregisterOccupier();
             gameObject.SetActive(false);
             _playerUnitsController.UnRegisterToUnitsController(this);
-            GameController.Instance.gameplayRefsHolder.Observer.OnUnitDied?.Invoke(this);
+            GameController.Instance.GameplayRefsHolder.Observer.OnUnitDied?.Invoke(this);
         }
     
         //for player unity only
         public void OnMyTileSelected()
         {
-            GameController.Instance.gameplayRefsHolder.Observer.OnUnitSelected?.Invoke(this);
+            GameController.Instance.GameplayRefsHolder.Observer.OnUnitSelected?.Invoke(this);
 
         }
         public void OnMyTileSecondarySelected()
         {
-            GameController.Instance.gameplayRefsHolder.Observer.OnUnitSecondarySelected?.Invoke(this);
+            GameController.Instance.GameplayRefsHolder.Observer.OnUnitSecondarySelected?.Invoke(this);
         }
 
         public void OnMyTileKillCommand()
@@ -137,47 +138,54 @@ namespace _Scripts.Units
                 Die();
         }
     
-        private IEnumerator SmoothLerp (float time, Vector2 finalPos, Action OnPerformed = null)
+        private IEnumerator SmoothLerp (float moveSpeed, Vector2 finalPos, Action onPerformed = null)
         {
-            GameController.Instance.gameplayRefsHolder.Player.PlayerInputLocker.AddInputLocker(this.name+"move");
+            GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.AddInputLocker(this.name+"move");
 
             Vector2 startingPos  = transform.position;
             float elapsedTime = 0;
-             
-            while (elapsedTime < time)
+
+            float moveTime =Vector2.Distance(startingPos,finalPos) / moveSpeed;
+            
+            while (elapsedTime < moveTime)
             {
-                transform.position = Vector2.Lerp(startingPos, finalPos, (elapsedTime / time));
+                transform.position = Vector2.Lerp(startingPos, finalPos, (elapsedTime / moveTime));
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
-            OnPerformed?.Invoke();
-            GameController.Instance.gameplayRefsHolder.Player.PlayerInputLocker.RemoveInputLocker(this.name+"move");
+            onPerformed?.Invoke();
+            GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.RemoveInputLocker(this.name+"move");
 
         }
     
-        private IEnumerator SmoothLerpPingPong (float time, Vector2 finalPos, Action OnPerformed = null)
+        private IEnumerator SmoothLerpPingPong (float moveSpeed, Vector2 finalPos, Action onPerformed = null)
         {
-            GameController.Instance.gameplayRefsHolder.Player.PlayerInputLocker.AddInputLocker(this.name+"attack");
-
+            GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.AddInputLocker(this.name+"attack");
+            
             Vector2 startingPos  = transform.position;
             float elapsedTime = 0;
              
-            while (elapsedTime < time)
+            float moveTime =Vector2.Distance(startingPos,finalPos) / moveSpeed;
+            
+            while (elapsedTime < moveTime)
             {
-                transform.position = Vector2.Lerp(startingPos, finalPos, (elapsedTime / time));
+                transform.position = Vector2.Lerp(startingPos, finalPos, (elapsedTime / moveTime));
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
+            
             elapsedTime = 0;
-            while (elapsedTime < time)
+            moveTime =Vector2.Distance(startingPos,finalPos) / moveSpeed;
+            
+            while (elapsedTime < moveTime)
             {
-                transform.position = Vector2.Lerp(finalPos, startingPos, (elapsedTime / time));
+                transform.position = Vector2.Lerp(finalPos, startingPos, (elapsedTime / moveTime));
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
-            OnPerformed?.Invoke();
+            onPerformed?.Invoke();
             sleepIndicator.SetActive(true);
-            GameController.Instance.gameplayRefsHolder.Player.PlayerInputLocker.RemoveInputLocker(this.name+"attack");
+            GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.RemoveInputLocker(this.name+"attack");
 
         }
     }

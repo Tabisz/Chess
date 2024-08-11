@@ -11,14 +11,10 @@ namespace _Scripts.Utils
         [SerializeField] private List<UnitPackage> UnitsPackages;
 
         [SerializeField] private List<TilePackage> TilePackages;
-
-        [SerializeField]
-        private DifficultySetting CurrentDifficultySetting;
-
+        
         [SerializeField]
         private List<DifficultyPackage> DifficultyPackages;
 
-        private int KilledCount;
     
         public UnitPackage GetUnitPackage(UnitType type)
         {
@@ -29,32 +25,11 @@ namespace _Scripts.Utils
         {
             return TilePackages.Find(package => package.colorName == colorName).color;
         }
-
-        public void SetDifficultySettings(DifficultySetting setting)
-        {
-            CurrentDifficultySetting = setting;
-        }
-
-        public DifficultyPackage GetCurrentDifficultyPackage()
-        {
-            return DifficultyPackages.Find(x => x.SettingName == CurrentDifficultySetting);
-        }
-        public int GetKilledCount()
-        {
-            return KilledCount;
-        }
-
-        public void IncrementKilledCount()
-        {
-            KilledCount++;
-        }
-        public void ClearKilledCount()
-        {
-            KilledCount = 0;
         
+        public DifficultyPackage GetDifficultyPackage(DifficultySetting difficultySetting)
+        {
+            return DifficultyPackages.Find(x => x.SettingName == difficultySetting);
         }
-
-
     }
 
     public enum UnitType

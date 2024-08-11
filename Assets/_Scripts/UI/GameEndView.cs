@@ -12,12 +12,12 @@ public class GameEndView : View
     public override void Init()
     {
         base.Init();
-        GameController.Instance.gameplayRefsHolder.Observer.OnGameLost += Show;
+        GameController.Instance.GameplayRefsHolder.Observer.OnGameLost += Show;
     }
 
     public override void Show()
     {
-        killedCountText.text = "Killed count: " + GameController.Instance.GlobalStatistics.GetKilledCount();
+        killedCountText.text = "Killed count: " + GameController.Instance.RuntimeDataHolder.GetKilledCount();
         base.Show();
     }
 
@@ -36,6 +36,6 @@ public class GameEndView : View
 
     public override void Deinit()
     {
-        GameController.Instance.gameplayRefsHolder.Observer.OnGameLost -= Show;
+        GameController.Instance.GameplayRefsHolder.Observer.OnGameLost -= Show;
     }
 }

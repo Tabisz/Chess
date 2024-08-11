@@ -1,5 +1,6 @@
 using _Scripts.Utils;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 //Here pooling system should be implemented but i'm short on time :P
 
@@ -7,13 +8,13 @@ namespace _Scripts.Units
 {
     public class UnitsFactory : MonoBehaviour
     {
-        public GameObject UnitPrefab;
+        public GameObject unitPrefab;
         private GridManager _gridManager;
 
     
         public void Init()
         {
-            _gridManager = GameController.Instance.gameplayRefsHolder.GridManager;
+            _gridManager = GameController.Instance.GameplayRefsHolder.GridManager;
             SpawnPlayerStartingUnits();
             SpawnEnemyStartingUnits();
 
@@ -28,7 +29,8 @@ namespace _Scripts.Units
 
         private void SpawnEnemyStartingUnits()
         {
-            var difficultySetting = GameController.Instance.GlobalStatistics.GetCurrentDifficultyPackage();
+            var difficultySetting = GameController.Instance.GlobalStatistics.GetDifficultyPackage(
+                GameController.Instance.RuntimeDataHolder.CurrentDifficultySetting);
             for (int i = 0; i < difficultySetting.EnemyCount; i++)
             {
                 SpawnUnit(_gridManager.GetRandomFreeTile(), Fraction.ENEMY, difficultySetting.EnemyUnitType,false);
@@ -37,13 +39,15 @@ namespace _Scripts.Units
 
         public void SpawnEnemyAtRandom()
         {
-            var difficultySetting = GameController.Instance.GlobalStatistics.GetCurrentDifficultyPackage();
+            var difficultySetting = GameController.Instance.GlobalStatistics.GetDifficultyPackage(
+                GameController.Instance.RuntimeDataHolder.CurrentDifficultySetting);
             SpawnUnit(_gridManager.GetRandomFreeTile(), Fraction.ENEMY, difficultySetting.EnemyUnitType,false);
         }
 
         public void SpawnEnemy(Tile tile, bool disabledForNextTurn)
         {
-            var difficultySetting = GameController.Instance.GlobalStatistics.GetCurrentDifficultyPackage();
+            var difficultySetting = GameController.Instance.GlobalStatistics.GetDifficultyPackage(
+                GameController.Instance.RuntimeDataHolder.CurrentDifficultySetting);
             SpawnUnit(tile, Fraction.ENEMY, difficultySetting.EnemyUnitType, disabledForNextTurn);
         }
     
@@ -51,15 +55,15 @@ namespace _Scripts.Units
 
         private void SpawnUnit(Tile tile, Fraction fraction, UnitType type, bool disabledForNextTurn)
         {
-            var _unit =  Instantiate(UnitPrefab, tile.transform.position, Quaternion.identity).GetComponent<Unit>();
-            var _package = GameController.Instance.GlobalStatistics.GetUnitPackage(type);
+            var unit =  Instantiate(unitPrefab, tile.transform.position, Quaternion.identity).GetComponent<Unit>();
+            var package = GameController.Instance.GlobalStatistics.GetUnitPackage(type);
         
             if(fraction == Fraction.ENEMY)
-                _unit.Init(GameController.Instance.gameplayRefsHolder.AiUnitsController, fraction, _package.statistics, _package.graphic, disabledForNextTurn);
+                unit.Init(GameController.Instance.GameplayRefsHolder.AiUnitsController, fraction, package.statistics, package.graphic, disabledForNextTurn);
             else
-                _unit.Init(GameController.Instance.gameplayRefsHolder.PlayerUnitsController, fraction, _package.statistics, _package.graphic, disabledForNextTurn);
+                unit.Init(GameController.Instance.GameplayRefsHolder.PlayerUnitsController, fraction, package.statistics, package.graphic, disabledForNextTurn);
 
-            _unit.SpawnAtTile(tile);
+            unit.SpawnAtTile(tile);
 
         }
 

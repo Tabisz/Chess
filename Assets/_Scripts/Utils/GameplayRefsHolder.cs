@@ -2,55 +2,54 @@
 using _Scripts.Turns;
 using _Scripts.Units;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Scripts.Utils
 {
     public class GameplayRefsHolder : MonoBehaviour, ICustomInitializer,ICustomUpdater
     {
-        [SerializeField] private TurnController _turnController;
-        public TurnController TurnController => _turnController;
+        [SerializeField] private TurnController turnController;
+        public TurnController TurnController => turnController;
 
         [SerializeField] private InGameUIController inGameUIController;
         public InGameUIController InGameUIController => inGameUIController;
 
-        [SerializeField] private Player _player;
-        public Player Player => _player;
+        [SerializeField] private Player player;
+        public Player Player => player;
 
-        [SerializeField] private GridManager _gridManager;
-        public GridManager GridManager => _gridManager;
+        [SerializeField] private GridManager gridManager;
+        public GridManager GridManager => gridManager;
 
-        [SerializeField] private UnitsFactory _unitsFactory;
-        public UnitsFactory UnitsFactory => _unitsFactory;
+        [SerializeField] private UnitsFactory unitsFactory;
+        public UnitsFactory UnitsFactory => unitsFactory;
     
-        [SerializeField] private PlayerUnitsController _playerUnitsController;
-        public PlayerUnitsController PlayerUnitsController => _playerUnitsController;
+        [SerializeField] private PlayerUnitsController playerUnitsController;
+        public PlayerUnitsController PlayerUnitsController => playerUnitsController;
 
-        [SerializeField] private SpawningTurnController _spawningTurnController;
-        public SpawningTurnController SpawningTurnController => _spawningTurnController;
+        [SerializeField] private SpawningTurnController spawningTurnController;
+        public SpawningTurnController SpawningTurnController => spawningTurnController;
     
-        [SerializeField] private AiUnitsController _aiUnitsController;
-        public AiUnitsController AiUnitsController => _aiUnitsController;
+        [SerializeField] private AiUnitsController aiUnitsController;
+        public AiUnitsController AiUnitsController => aiUnitsController;
 
         public Observer Observer;
         public void Init()
         {
             Observer = new Observer();
-            _player.Init();
-            _gridManager.Init();
-            _playerUnitsController.Init();
-            _aiUnitsController.Init();
-            _unitsFactory.Init();
-            _turnController.Init();
+            player.Init();
+            gridManager.Init();
+            playerUnitsController.Init();
+            aiUnitsController.Init();
+            unitsFactory.Init();
+            turnController.Init();
             inGameUIController.Init();
-            _spawningTurnController.Init();
-
-
+            spawningTurnController.Init();
         }
 
         public void CustomUpdate()
         {
-            _turnController.CustomUpdate();
-            _player.CustomUpdate();
+            turnController.CustomUpdate();
+            player.CustomUpdate();
         }
 
         public void CustomFixedUpdate()
@@ -59,9 +58,9 @@ namespace _Scripts.Utils
     
         public void Deinit()
         {
-            _turnController.Deinit();
-            _gridManager.Deinit();
-            _playerUnitsController.Deinit();
+            turnController.Deinit();
+            gridManager.Deinit();
+            playerUnitsController.Deinit();
         }
     }
 }

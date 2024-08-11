@@ -13,7 +13,7 @@ public class TurnView : View
     public override void Init()
     {
         base.Init();
-        var turnController = GameController.Instance.gameplayRefsHolder.TurnController;
+        var turnController = GameController.Instance.GameplayRefsHolder.TurnController;
         turnController.OnNextTurn += UpdateTurnText;
         UpdateTurnText(turnController.CurrentTurn, turnController.CurrentTurnProvider.GetName());
     }
@@ -38,21 +38,21 @@ public class TurnView : View
 
     public void TrySkipTurn()
     {
-        if(GameController.Instance.gameplayRefsHolder.Player.PlayerInputLocker.IsLocked) return;
+        if(GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.IsLocked) return;
 
-        GameController.Instance.gameplayRefsHolder.TurnController.RequestSkip("Player");
+        GameController.Instance.GameplayRefsHolder.TurnController.RequestSkip("Player");
     }
 
     public void RequestNextMove()
     {
-        if(GameController.Instance.gameplayRefsHolder.Player.PlayerInputLocker.IsLocked) return;
+        if(GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.IsLocked) return;
 
-        GameController.Instance.gameplayRefsHolder.Observer.OnNextMoveRequested?.Invoke();
+        GameController.Instance.GameplayRefsHolder.Observer.OnNextMoveRequested?.Invoke();
     }
     
 
     public override void Deinit()
     {
-        GameController.Instance.gameplayRefsHolder.TurnController.OnNextTurn -= UpdateTurnText;
+        GameController.Instance.GameplayRefsHolder.TurnController.OnNextTurn -= UpdateTurnText;
     }
 }

@@ -7,27 +7,17 @@ using UnityEngine;
 public class GameplayState : State
 {
 
-
     public override void Init()
     {
         Debug.Log("Gameplay started");
-        GameController.Instance.gameplayRefsHolder = Object.FindFirstObjectByType<GameplayRefsHolder>();
-        GameController.Instance.gameplayRefsHolder.Init();
-        GameController.Instance.GlobalStatistics.ClearKilledCount();
-        GameController.Instance.gameplayRefsHolder.Observer.OnUnitDied += OnKilled;
-
-
-    }
-
-    private void OnKilled(Unit unit)
-    {
-        if(unit.Fraction == Fraction.ENEMY)
-            GameController.Instance.GlobalStatistics.IncrementKilledCount();
+        GameController.Instance.SetGameplayRefsHolder();
+        GameController.Instance.RuntimeDataHolder.Reset();
+        
     }
 
     public override void CustomUpdate()
     {
-        GameController.Instance.gameplayRefsHolder.CustomUpdate();
+        GameController.Instance.GameplayRefsHolder.CustomUpdate();
     }
 
     public override void CustomFixedUpdate()
@@ -37,10 +27,7 @@ public class GameplayState : State
     public override void Deinit()
     {
         Debug.Log("Gameplay End");
-        GameController.Instance.gameplayRefsHolder.Observer.OnUnitDied -= OnKilled;
-        GameController.Instance.gameplayRefsHolder.Deinit();
-        GameController.Instance.gameplayRefsHolder = null;
-
-
+        GameController.Instance.GameplayRefsHolder.Deinit();
+        GameController.Instance.ClearGameplayRefsHolder();
     }
 }

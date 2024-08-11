@@ -85,7 +85,7 @@ namespace _Scripts.AI
         {
             int min = int.MaxValue;
             Unit closestUnit = null;
-            foreach (var playerUnit in GameController.Instance.gameplayRefsHolder.PlayerUnitsController.Units)
+            foreach (var playerUnit in GameController.Instance.GameplayRefsHolder.PlayerUnitsController.Units)
             {
                 int distance = GridManager.GetDistance(unit.CurrentTile, playerUnit.CurrentTile);
                 if (distance < min)

@@ -17,9 +17,9 @@ namespace _Scripts.Units
         public virtual void Init()
         {
             units = new List<Unit>();
-            TurnController = GameController.Instance.gameplayRefsHolder.TurnController;
-            Observer = GameController.Instance.gameplayRefsHolder.Observer;
-            GridManager = GameController.Instance.gameplayRefsHolder.GridManager;
+            TurnController = GameController.Instance.GameplayRefsHolder.TurnController;
+            Observer = GameController.Instance.GameplayRefsHolder.Observer;
+            GridManager = GameController.Instance.GameplayRefsHolder.GridManager;
         }
     
         public void RegisterToUnitsController(Unit unit)

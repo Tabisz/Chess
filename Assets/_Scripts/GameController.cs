@@ -16,10 +16,15 @@ namespace _Scripts
 
         [SerializeField]private GlobalStatistics globalStatistics;
         public GlobalStatistics GlobalStatistics => globalStatistics;
+
+        private RuntimeDataHolder runtimeDataHolder;
+        public RuntimeDataHolder RuntimeDataHolder => runtimeDataHolder;
     
-    
-        [HideInInspector]
-        public GameplayRefsHolder gameplayRefsHolder;
+        
+        [SerializeField]
+        private GameplayRefsHolder gameplayRefsHolder;
+        public GameplayRefsHolder GameplayRefsHolder => gameplayRefsHolder;
+
     
         private void Awake() 
         {
@@ -34,7 +39,9 @@ namespace _Scripts
             DontDestroyOnLoad(gameObject);
         
             SceneLoader.Init();
-        
+
+            runtimeDataHolder = new RuntimeDataHolder();
+            runtimeDataHolder.Init();
         
         
             GameSm = new StateMachine<State>();
@@ -50,6 +57,21 @@ namespace _Scripts
 #endif
         }
 
+        public void SetGameplayRefsHolder()
+        {
+            gameplayRefsHolder = FindFirstObjectByType<GameplayRefsHolder>();
+            if(gameplayRefsHolder)
+                gameplayRefsHolder.Init();
+        }
+
+        public void ClearGameplayRefsHolder()
+        {
+            if(!gameplayRefsHolder)
+                return;
+            
+            gameplayRefsHolder.Deinit();
+            gameplayRefsHolder = null;
+        }
         private void Update()
         {
             GameSm.CustomUpdate();

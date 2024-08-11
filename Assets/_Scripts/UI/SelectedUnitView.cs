@@ -16,7 +16,7 @@ namespace _Scripts.UI
         public override void Init()
         {
             base.Init();
-            var observer = GameController.Instance.gameplayRefsHolder.Observer;
+            var observer = GameController.Instance.GameplayRefsHolder.Observer;
             observer.OnUnitSelected += UpdateUnitText;
             observer.OnEmptyTileSelected += OnEmptyTileSelected;
         }
@@ -40,7 +40,7 @@ namespace _Scripts.UI
 
         public override void Deinit()
         {
-            var observer = GameController.Instance.gameplayRefsHolder.Observer;
+            var observer = GameController.Instance.GameplayRefsHolder.Observer;
             observer.OnUnitSelected -= UpdateUnitText;
         }
     }
