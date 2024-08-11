@@ -12,7 +12,7 @@ public class GameEndView : View
     public override void Init()
     {
         base.Init();
-        GameController.Instance.GameplayRefsHolder.Observer.OnGameLost += Show;
+        GameController.Instance.gameplayRefsHolder.Observer.OnGameLost += Show;
     }
 
     public override void Show()
@@ -36,6 +36,6 @@ public class GameEndView : View
 
     public override void Deinit()
     {
-        GameController.Instance.GameplayRefsHolder.Observer.OnGameLost -= Show;
+        GameController.Instance.gameplayRefsHolder.Observer.OnGameLost -= Show;
     }
 }

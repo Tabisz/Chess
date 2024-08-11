@@ -14,7 +14,7 @@ public class RaycastingManager : MonoBehaviour
 
     public void Init()
     {
-        _camera = GameController.Instance.Camera;
+        _camera = GameController.Instance.GameCamera;
     }
 
     public void CustomUpdate()

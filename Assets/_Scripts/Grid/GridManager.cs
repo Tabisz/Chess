@@ -21,10 +21,10 @@ public class GridManager : MonoBehaviour, ICustomInitializer
     public void Init()
     {
         GenerateGrid();
-        GameController.Instance.GameplayRefsHolder.Observer.OnUnitSelected += OnPlayerUnitSelected;
+        GameController.Instance.gameplayRefsHolder.Observer.OnUnitSelected += OnPlayerUnitSelected;
         
-        GameController.Instance.GameplayRefsHolder.Observer.OnEmptyTileSelected += OnEmptyTileSelected;
-        GameController.Instance.GameplayRefsHolder.Observer.OnEmptyTileSecondarySelected += OnEmptyTileSelected;
+        GameController.Instance.gameplayRefsHolder.Observer.OnEmptyTileSelected += OnEmptyTileSelected;
+        GameController.Instance.gameplayRefsHolder.Observer.OnEmptyTileSecondarySelected += OnEmptyTileSelected;
 
         
 

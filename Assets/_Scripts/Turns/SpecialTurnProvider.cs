@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SpecialTurnProvider : TestTurnProvider
 {
-    void Update()
+    public override void Update()
     {
         if (!_imActive) return;
 

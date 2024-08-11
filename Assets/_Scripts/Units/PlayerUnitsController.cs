@@ -12,14 +12,14 @@ namespace _Scripts.Units
         {
             base.Init();
 
-            _observer.OnEmptyTileSelected += OnEmptyTileSelected;
-            _observer.OnEmptyTileSecondarySelected += OnEmptyTileSecondarySelected;
+            Observer.OnEmptyTileSelected += OnEmptyTileSelected;
+            Observer.OnEmptyTileSecondarySelected += OnEmptyTileSecondarySelected;
 
-            _observer.OnUnitSelected += OnUnitSelected;
-            _observer.OnUnitSecondarySelected += OnUnitSecondarySelected;
-            _observer.OnUnitDied += CheckForGameEnd;
+            Observer.OnUnitSelected += OnUnitSelected;
+            Observer.OnUnitSecondarySelected += OnUnitSecondarySelected;
+            Observer.OnUnitDied += CheckForGameEnd;
         
-            _turnController.PlayerRegisterTurnProvider(this);
+            TurnController.PlayerRegisterTurnProvider(this);
         }
     
         private void OnUnitSelected(Unit unit)
@@ -29,7 +29,7 @@ namespace _Scripts.Units
 
         private void OnUnitSecondarySelected(Unit unit)
         {
-            if(_turnController.CurrentTurnProvider.GetName() != GetName())
+            if(TurnController.CurrentTurnProvider.GetName() != GetName())
                 return;
         
             if(_currentlySelectedUnit!= null)
@@ -47,7 +47,7 @@ namespace _Scripts.Units
 
         private void OnEmptyTileSecondarySelected(Tile tile)
         {
-            if(_turnController.CurrentTurnProvider.GetName() != GetName())
+            if(TurnController.CurrentTurnProvider.GetName() != GetName())
                 return;
         
             if (_currentlySelectedUnit != null)
@@ -60,12 +60,12 @@ namespace _Scripts.Units
 
         private void RefreshHighlightsWhenMovePerformed()
         {
-            _gridManager.ShowRangesForUnit(_currentlySelectedUnit);
+            GridManager.ShowRangesForUnit(_currentlySelectedUnit);
         }
     
         private bool TryMoveUnit(Unit unit, Tile tile)
         {
-            if ( unit.CanPerformMove() && unit.Fraction ==Fraction.PLAYER && _gridManager.IsTileInRange(unit.CurrentTile, tile,
+            if ( unit.CanPerformMove() && unit.Fraction ==Fraction.PLAYER && GridManager.IsTileInRange(unit.CurrentTile, tile,
                     unit.Statistics.MoveRange))
             {
                 unit.MoveToTile(tile, RefreshHighlightsWhenMovePerformed);
@@ -78,7 +78,7 @@ namespace _Scripts.Units
         {
             if (sourceUnit.CanPerformAttack() && sourceUnit != destinationUnit &&
                 sourceUnit.Fraction != destinationUnit.Fraction &&
-                _gridManager.IsTileInRange(sourceUnit.CurrentTile,
+                GridManager.IsTileInRange(sourceUnit.CurrentTile,
                     destinationUnit.CurrentTile,
                     sourceUnit.Statistics.AttackRange))
             {
@@ -90,9 +90,9 @@ namespace _Scripts.Units
 
         public void StartMyTurn()
         {
-            for (var i = 0; i < _units.Count; i++)
+            for (var i = 0; i < units.Count; i++)
             {
-                var unit = _units[i];
+                var unit = units[i];
                 unit.ResetTurn();
             }
         }
@@ -106,7 +106,7 @@ namespace _Scripts.Units
         public void EndMyTurn()
         {
             _currentlySelectedUnit = null;
-            _observer.OnEmptyTileSelected?.Invoke(null);
+            Observer.OnEmptyTileSelected?.Invoke(null);
         }
 
         public string GetName()
@@ -117,18 +117,18 @@ namespace _Scripts.Units
         private void CheckForGameEnd(Unit unit)
         {
             if(unit.Fraction == Fraction.PLAYER)
-                if(_units.Count == 0)
-                    _observer.OnGameLost?.Invoke();
+                if(units.Count == 0)
+                    Observer.OnGameLost?.Invoke();
         }
     
         public void Deinit()
         {
-            _observer.OnEmptyTileSelected -= OnEmptyTileSelected;
-            _observer.OnEmptyTileSecondarySelected -= OnEmptyTileSecondarySelected;
+            Observer.OnEmptyTileSelected -= OnEmptyTileSelected;
+            Observer.OnEmptyTileSecondarySelected -= OnEmptyTileSecondarySelected;
         
-            _observer.OnUnitSelected -= OnUnitSelected;
-            _observer.OnUnitSecondarySelected -= OnUnitSecondarySelected;
-            _observer.OnUnitDied -= CheckForGameEnd;
+            Observer.OnUnitSelected -= OnUnitSelected;
+            Observer.OnUnitSecondarySelected -= OnUnitSecondarySelected;
+            Observer.OnUnitDied -= CheckForGameEnd;
 
         }
     }

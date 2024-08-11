@@ -7,28 +7,28 @@ namespace _Scripts.Units
 {
     public class UnitsController : MonoBehaviour
     {
-        protected List<Unit> _units;
-        public List<Unit> Units => _units;
+        protected List<Unit> units;
+        public List<Unit> Units => units;
     
-        protected TurnController _turnController;
-        protected Observer _observer;
-        protected GridManager _gridManager;
+        protected TurnController TurnController;
+        protected Observer Observer;
+        protected GridManager GridManager;
 
         public virtual void Init()
         {
-            _units = new List<Unit>();
-            _turnController = GameController.Instance.GameplayRefsHolder.TurnController;
-            _observer = GameController.Instance.GameplayRefsHolder.Observer;
-            _gridManager = GameController.Instance.GameplayRefsHolder.GridManager;
+            units = new List<Unit>();
+            TurnController = GameController.Instance.gameplayRefsHolder.TurnController;
+            Observer = GameController.Instance.gameplayRefsHolder.Observer;
+            GridManager = GameController.Instance.gameplayRefsHolder.GridManager;
         }
     
         public void RegisterToUnitsController(Unit unit)
         {
-            _units.Add(unit);
+            units.Add(unit);
         }
         public void UnRegisterToUnitsController(Unit unit)
         {
-            _units.Remove(unit);
+            units.Remove(unit);
         }
 
     }

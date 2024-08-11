@@ -4,8 +4,6 @@ using _Scripts;
 using _Scripts.Units;
 using _Scripts.Utils;
 using UnityEngine;
-using UnityEngine.UI;
-
 public class GameplayState : State
 {
 
@@ -13,10 +11,10 @@ public class GameplayState : State
     public override void Init()
     {
         Debug.Log("Gameplay started");
-        GameController.Instance.GameplayRefsHolder = GameObject.FindObjectOfType<GameplayRefsHolder>();
-        GameController.Instance.GameplayRefsHolder.Init();
+        GameController.Instance.gameplayRefsHolder = Object.FindFirstObjectByType<GameplayRefsHolder>();
+        GameController.Instance.gameplayRefsHolder.Init();
         GameController.Instance.GlobalStatistics.ClearKilledCount();
-        GameController.Instance.GameplayRefsHolder.Observer.OnUnitDied += OnKilled;
+        GameController.Instance.gameplayRefsHolder.Observer.OnUnitDied += OnKilled;
 
 
     }
@@ -29,7 +27,7 @@ public class GameplayState : State
 
     public override void CustomUpdate()
     {
-        GameController.Instance.GameplayRefsHolder.CustomUpdate();
+        GameController.Instance.gameplayRefsHolder.CustomUpdate();
     }
 
     public override void CustomFixedUpdate()
@@ -39,9 +37,9 @@ public class GameplayState : State
     public override void Deinit()
     {
         Debug.Log("Gameplay End");
-        GameController.Instance.GameplayRefsHolder.Observer.OnUnitDied -= OnKilled;
-        GameController.Instance.GameplayRefsHolder.Deinit();
-        GameController.Instance.GameplayRefsHolder = null;
+        GameController.Instance.gameplayRefsHolder.Observer.OnUnitDied -= OnKilled;
+        GameController.Instance.gameplayRefsHolder.Deinit();
+        GameController.Instance.gameplayRefsHolder = null;
 
 
     }

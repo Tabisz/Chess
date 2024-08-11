@@ -7,7 +7,7 @@ public class PlayerMenuState : PlayerState
 {
     public override void Init()
     {
-        GameController.Instance.GameplayRefsHolder.InGameUIController.GetView(ViewType.IN_GAME_MENU_VIEW).Show();
+        GameController.Instance.gameplayRefsHolder.InGameUIController.GetView(ViewType.IN_GAME_MENU_VIEW).Show();
     }
     public override void CustomUpdate()
     {
@@ -17,7 +17,7 @@ public class PlayerMenuState : PlayerState
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            GameController.Instance.GameplayRefsHolder.Player.PlayerSM.ChangeState(new PlayerGameplayState());            
+            GameController.Instance.gameplayRefsHolder.Player.PlayerSM.ChangeState(new PlayerGameplayState());            
         }
     }
 
@@ -27,7 +27,7 @@ public class PlayerMenuState : PlayerState
     
     public override void Deinit()
     {
-        GameController.Instance.GameplayRefsHolder.InGameUIController.GetView(ViewType.IN_GAME_MENU_VIEW).Hide();
+        GameController.Instance.gameplayRefsHolder.InGameUIController.GetView(ViewType.IN_GAME_MENU_VIEW).Hide();
     }
 
 }

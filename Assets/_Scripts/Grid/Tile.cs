@@ -49,14 +49,14 @@ public class Tile : Interactable {
         if(_currentTileOccupier != null)
             _currentTileOccupier.OnMyTileSelected();
         else
-            GameController.Instance.GameplayRefsHolder.Observer.OnEmptyTileSelected?.Invoke(this);
+            GameController.Instance.gameplayRefsHolder.Observer.OnEmptyTileSelected?.Invoke(this);
    
     }
 
     public override void PerformSecondaryInteract()
     {
         if (_currentTileOccupier == null)
-            GameController.Instance.GameplayRefsHolder.Observer.OnEmptyTileSecondarySelected?.Invoke(this);
+            GameController.Instance.gameplayRefsHolder.Observer.OnEmptyTileSecondarySelected?.Invoke(this);
         
         else
             _currentTileOccupier.OnMyTileSecondarySelected();

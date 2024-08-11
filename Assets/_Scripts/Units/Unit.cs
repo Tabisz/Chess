@@ -77,7 +77,7 @@ namespace _Scripts.Units
 
         public void SpawnAtTile(Tile tile)
         {
-            transform.position = GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(tile);
+            transform.position = GameController.Instance.gameplayRefsHolder.GridManager.GetPositionOfTile(tile);
             _currentTile = tile;
         
             if(tile.CurrentTileOccipier == null)
@@ -88,7 +88,7 @@ namespace _Scripts.Units
             if(_currentTile != null)
                 _currentTile.UnregisterOccupier();
         
-            StartCoroutine(SmoothLerp(_statistics.MoveSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(tile), OnPerformed));
+            StartCoroutine(SmoothLerp(_statistics.MoveSpeed,GameController.Instance.gameplayRefsHolder.GridManager.GetPositionOfTile(tile), OnPerformed));
 
             _currentTile = tile;
             _movePerformed = true;
@@ -100,14 +100,14 @@ namespace _Scripts.Units
         public void Attack( Unit unit, Action OnPerformed = null)
         {
             Debug.Log("ATTACK!!");
-            StartCoroutine(SmoothLerpPingPong(_statistics.AttackSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(unit.CurrentTile), OnPerformed ));
+            StartCoroutine(SmoothLerpPingPong(_statistics.AttackSpeed,GameController.Instance.gameplayRefsHolder.GridManager.GetPositionOfTile(unit.CurrentTile), OnPerformed ));
             unit.ReceiveDamage(_statistics.Dmg);
             _attackPerformed = true;
         }
         private void ReceiveDamage(int damageCount)
         {
             _currentHp -= damageCount;
-            GameController.Instance.GameplayRefsHolder.Observer.OnDamageReceived?.Invoke(this);
+            GameController.Instance.gameplayRefsHolder.Observer.OnDamageReceived?.Invoke(this);
         
             if(_currentHp<=0)
                 Die();
@@ -117,18 +117,18 @@ namespace _Scripts.Units
             _currentTile.UnregisterOccupier();
             gameObject.SetActive(false);
             _playerUnitsController.UnRegisterToUnitsController(this);
-            GameController.Instance.GameplayRefsHolder.Observer.OnUnitDied?.Invoke(this);
+            GameController.Instance.gameplayRefsHolder.Observer.OnUnitDied?.Invoke(this);
         }
     
         //for player unity only
         public void OnMyTileSelected()
         {
-            GameController.Instance.GameplayRefsHolder.Observer.OnUnitSelected?.Invoke(this);
+            GameController.Instance.gameplayRefsHolder.Observer.OnUnitSelected?.Invoke(this);
 
         }
         public void OnMyTileSecondarySelected()
         {
-            GameController.Instance.GameplayRefsHolder.Observer.OnUnitSecondarySelected?.Invoke(this);
+            GameController.Instance.gameplayRefsHolder.Observer.OnUnitSecondarySelected?.Invoke(this);
         }
 
         public void OnMyTileKillCommand()
@@ -139,7 +139,7 @@ namespace _Scripts.Units
     
         private IEnumerator SmoothLerp (float time, Vector2 finalPos, Action OnPerformed = null)
         {
-            GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.AddInputLocker(this.name+"move");
+            GameController.Instance.gameplayRefsHolder.Player.PlayerInputLocker.AddInputLocker(this.name+"move");
 
             Vector2 startingPos  = transform.position;
             float elapsedTime = 0;
@@ -151,13 +151,13 @@ namespace _Scripts.Units
                 yield return null;
             }
             OnPerformed?.Invoke();
-            GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.RemoveInputLocker(this.name+"move");
+            GameController.Instance.gameplayRefsHolder.Player.PlayerInputLocker.RemoveInputLocker(this.name+"move");
 
         }
     
         private IEnumerator SmoothLerpPingPong (float time, Vector2 finalPos, Action OnPerformed = null)
         {
-            GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.AddInputLocker(this.name+"attack");
+            GameController.Instance.gameplayRefsHolder.Player.PlayerInputLocker.AddInputLocker(this.name+"attack");
 
             Vector2 startingPos  = transform.position;
             float elapsedTime = 0;
@@ -177,7 +177,7 @@ namespace _Scripts.Units
             }
             OnPerformed?.Invoke();
             sleepIndicator.SetActive(true);
-            GameController.Instance.GameplayRefsHolder.Player.PlayerInputLocker.RemoveInputLocker(this.name+"attack");
+            GameController.Instance.gameplayRefsHolder.Player.PlayerInputLocker.RemoveInputLocker(this.name+"attack");
 
         }
     }

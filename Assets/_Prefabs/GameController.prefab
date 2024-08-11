@@ -138,10 +138,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6774ce38ee3f8ec47bb41160649461f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _camera: {fileID: 359250834}
-  _sceneLoader: {fileID: 747429252892287190}
-  _globalStatistics: {fileID: 11400000, guid: 069a761424705f24d8947360326d1ec3, type: 2}
-  GameplayRefsHolder: {fileID: 0}
+  gameCamera: {fileID: 359250834}
+  sceneLoader: {fileID: 747429252892287190}
+  globalStatistics: {fileID: 11400000, guid: 069a761424705f24d8947360326d1ec3, type: 2}
+  gameplayRefsHolder: {fileID: 0}
 --- !u!114 &747429252892287190
 MonoBehaviour:
   m_ObjectHideFlags: 0

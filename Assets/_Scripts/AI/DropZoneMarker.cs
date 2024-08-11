@@ -3,22 +3,22 @@ namespace _Scripts.AI
 {
     public class DropZoneMarker : MonoBehaviour
     {
-        private Tile _currentTile;
+        private Tile currentTile;
 
-        public void Init(Tile currentTile)
+        public void Init(Tile _currentTile)
         {
             gameObject.SetActive(true);
-            _currentTile = currentTile;
+            this.currentTile = _currentTile;
         }
 
         public Tile GetTile()
         {
-            return _currentTile;
+            return currentTile;
         }
 
         public void Deinit()
         {
-            _currentTile = null;
+            currentTile = null;
             gameObject.SetActive(false);
         }
     

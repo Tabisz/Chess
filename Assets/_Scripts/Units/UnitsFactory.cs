@@ -13,7 +13,7 @@ namespace _Scripts.Units
     
         public void Init()
         {
-            _gridManager = GameController.Instance.GameplayRefsHolder.GridManager;
+            _gridManager = GameController.Instance.gameplayRefsHolder.GridManager;
             SpawnPlayerStartingUnits();
             SpawnEnemyStartingUnits();
 
@@ -55,9 +55,9 @@ namespace _Scripts.Units
             var _package = GameController.Instance.GlobalStatistics.GetUnitPackage(type);
         
             if(fraction == Fraction.ENEMY)
-                _unit.Init(GameController.Instance.GameplayRefsHolder.AiUnitsController, fraction, _package.statistics, _package.graphic, disabledForNextTurn);
+                _unit.Init(GameController.Instance.gameplayRefsHolder.AiUnitsController, fraction, _package.statistics, _package.graphic, disabledForNextTurn);
             else
-                _unit.Init(GameController.Instance.GameplayRefsHolder.PlayerUnitsController, fraction, _package.statistics, _package.graphic, disabledForNextTurn);
+                _unit.Init(GameController.Instance.gameplayRefsHolder.PlayerUnitsController, fraction, _package.statistics, _package.graphic, disabledForNextTurn);
 
             _unit.SpawnAtTile(tile);
 

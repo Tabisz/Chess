@@ -14,7 +14,7 @@ public class EmemiesKilledView : View
     public override void Init()
     {
         base.Init();
-        GameController.Instance.GameplayRefsHolder.Observer.OnUnitDied += TryCountDead;
+        GameController.Instance.gameplayRefsHolder.Observer.OnUnitDied += TryCountDead;
     }
 
     public void TryCountDead(Unit unit)

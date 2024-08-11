@@ -7,19 +7,19 @@ namespace _Scripts
     {
         public static GameController Instance { get; private set; }
 
-        [SerializeField] private Camera _camera;
-        public Camera Camera => _camera;
+        [SerializeField] private Camera gameCamera;
+        public Camera GameCamera => gameCamera;
         public StateMachine<State> GameSm { get; private set; }
 
-        [SerializeField] private SceneLoader _sceneLoader;
-        public SceneLoader SceneLoader => _sceneLoader;
+        [SerializeField] private SceneLoader sceneLoader;
+        public SceneLoader SceneLoader => sceneLoader;
 
-        public GlobalStatistics GlobalStatistics => _globalStatistics;
-        [SerializeField]private GlobalStatistics _globalStatistics;
+        [SerializeField]private GlobalStatistics globalStatistics;
+        public GlobalStatistics GlobalStatistics => globalStatistics;
     
     
         [HideInInspector]
-        public GameplayRefsHolder GameplayRefsHolder;
+        public GameplayRefsHolder gameplayRefsHolder;
     
         private void Awake() 
         {
@@ -41,12 +41,12 @@ namespace _Scripts
             GameSm.Init();
 
 #if UNITY_EDITOR
-            if(_sceneLoader.CurrentScene.MyEnum == SceneEnum.MENU)
+            if(sceneLoader.CurrentScene.MyEnum == SceneEnum.MENU)
                 GameSm.ChangeState(new MenuState());
             else
                 GameSm.ChangeState(new GameplayState());
 #else
-                GameSM.ChangeState(new MenuState());
+                GameSm.ChangeState(new MenuState());
 #endif
         }
 

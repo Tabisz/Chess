@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using _Scripts.Utils;
+﻿using _Scripts.Utils;
 using UnityEngine;
 
 public class MenuState : State
@@ -12,7 +10,7 @@ public class MenuState : State
     public override void Init()
     {
         Debug.Log("Menu started");
-        _refsHolder = GameObject.FindObjectOfType<MainMenuRefsHolder>();
+        _refsHolder = Object.FindFirstObjectByType<MainMenuRefsHolder>();
         _refsHolder.Init();
     }
 

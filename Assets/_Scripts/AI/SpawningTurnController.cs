@@ -16,7 +16,7 @@ namespace _Scripts.AI
         {
             var enemyCount = GameController.Instance.GlobalStatistics.GetCurrentDifficultyPackage().EnemyCount;
         
-            GameController.Instance.GameplayRefsHolder.TurnController.SpawningRegisterTurnProvider(this);
+            GameController.Instance.gameplayRefsHolder.TurnController.SpawningRegisterTurnProvider(this);
             _getReadyPhase = true;
 
             _dropZoneMarkerPool = CreateDropZoneMarkersPool(enemyCount);
@@ -54,7 +54,7 @@ namespace _Scripts.AI
     
         private void ActivateMarkers()
         {
-            var grid = GameController.Instance.GameplayRefsHolder.GridManager;
+            var grid = GameController.Instance.gameplayRefsHolder.GridManager;
             for (int i = 0; i < _dropZoneMarkerPool.Length; i++)
             {
                 var tile = grid.GetRandomFreeTile();
@@ -80,7 +80,7 @@ namespace _Scripts.AI
                 if(tile.CurrentTileOccipier != null)
                     tile.CurrentTileOccipier.OnMyTileKillCommand();
             
-                GameController.Instance.GameplayRefsHolder.UnitsFactory.SpawnEnemy(tile, true);
+                GameController.Instance.gameplayRefsHolder.UnitsFactory.SpawnEnemy(tile, true);
             }
         }
 

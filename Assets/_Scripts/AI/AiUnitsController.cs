@@ -12,18 +12,18 @@ namespace _Scripts.AI
         public override void Init()
         {
             base.Init();
-            _turnController.AiRegisterTurnProvider(this);
+            TurnController.AiRegisterTurnProvider(this);
         }
 
         public void StartMyTurn()
         {
             _currentUnitMoving = 0;
-            _observer.OnNextMoveRequested += MoveOneUnit;
+            Observer.OnNextMoveRequested += MoveOneUnit;
         }
 
         private void MoveOneUnit()
         {
-            var unit = _units[_currentUnitMoving];
+            var unit = units[_currentUnitMoving];
 
             if (unit.CanPerformAttack() && TryAttackIfInRange(unit)) //try to attack
             {
@@ -53,7 +53,7 @@ namespace _Scripts.AI
         {
             Unit closestUnit = GetClosestUnit(unit);
             var hasUnitInAttackRange = closestUnit!= null &&
-                                       _gridManager.IsTileInRange(unit.CurrentTile, closestUnit.CurrentTile, unit.Statistics.AttackRange);
+                                       GridManager.IsTileInRange(unit.CurrentTile, closestUnit.CurrentTile, unit.Statistics.AttackRange);
             if (hasUnitInAttackRange)
             {
                 unit.Attack(closestUnit);
@@ -67,7 +67,7 @@ namespace _Scripts.AI
             var closestUnit = GetClosestUnit(unit);
             Tile tile = null;
             if(closestUnit)
-                tile = _gridManager.GetClosestFreeTileTowardsDestination(unit.CurrentTile, closestUnit.CurrentTile, unit.Statistics.MoveRange);
+                tile = GridManager.GetClosestFreeTileTowardsDestination(unit.CurrentTile, closestUnit.CurrentTile, unit.Statistics.MoveRange);
 
             if (tile != null && tile != unit.CurrentTile)
             {
@@ -85,9 +85,9 @@ namespace _Scripts.AI
         {
             int min = int.MaxValue;
             Unit closestUnit = null;
-            foreach (var playerUnit in GameController.Instance.GameplayRefsHolder.PlayerUnitsController.Units)
+            foreach (var playerUnit in GameController.Instance.gameplayRefsHolder.PlayerUnitsController.Units)
             {
-                int distance = _gridManager.GetDistance(unit.CurrentTile, playerUnit.CurrentTile);
+                int distance = GridManager.GetDistance(unit.CurrentTile, playerUnit.CurrentTile);
                 if (distance < min)
                 {
                     min = distance;
@@ -99,23 +99,23 @@ namespace _Scripts.AI
         }
         public bool HasAnyMoves()
         {
-            if (_currentUnitMoving > _units.Count)
+            if (_currentUnitMoving > units.Count)
                 return false;
-            for (var i = 0; i < _units.Count; i++)
-                if (_units[i].CanPerformAttack() || _units[i].CanPerformMove())
+            for (var i = 0; i < units.Count; i++)
+                if (units[i].CanPerformAttack() || units[i].CanPerformMove())
                     return true;
             return false;
         }
 
         public void EndMyTurn()
         {
-            for (var i = 0; i < _units.Count; i++)
+            for (var i = 0; i < units.Count; i++)
             {
-                var unit = _units[i];
+                var unit = units[i];
                 unit.ResetTurn();
             }
 
-            _observer.OnNextMoveRequested -= MoveOneUnit;
+            Observer.OnNextMoveRequested -= MoveOneUnit;
         }
 
         public string GetName()
