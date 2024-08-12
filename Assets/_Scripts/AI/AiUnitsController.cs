@@ -29,24 +29,15 @@ namespace _Scripts.AI
             var unit = units[_currentUnitMoving];
 
             if (unit.CanPerformAttack() && TryAttackIfInRange(unit)) //try to attack
-            {
-                _currentUnitMoving++;
-                unit.SkipTurn();
-                MovePerformed?.Invoke();
                 return;
-            }
-
-            if (unit.CanPerformMove()) //try to move
-            {
-                TryMoveTowardsClosestPlayer(unit);
-                MovePerformed?.Invoke();
-            }
-            else// do nothing
-            {
-                unit.SkipTurn();
-                _currentUnitMoving++;
-                MovePerformed?.Invoke();
-            }
+            
+            if (unit.CanPerformMove() && TryMoveTowardsClosestPlayer(unit)) //try to move
+                return;
+            
+            // do nothing
+            unit.SkipTurn();
+            _currentUnitMoving++;
+            MovePerformed?.Invoke();
         }
 
 
@@ -55,7 +46,7 @@ namespace _Scripts.AI
             var closestUnit = GetOppositeUnitInAttackRange(unit);
             if (closestUnit)
             {
-                unit.Attack(closestUnit);
+                unit.Attack(closestUnit, OnAttackPerformed);
                 return true;
             }
             return false;
@@ -70,15 +61,24 @@ namespace _Scripts.AI
 
             if (tile != null && tile != unit.CurrentTile)
             {
-                unit.MoveToTile(tile);
+                unit.MoveToTile(tile, OnMovePerformed);
                 return true;
             }
-            else
-            {
-                unit.SkipTurn();
-                return false;
-            }
+            return false;
+            
         }
+
+        public void OnAttackPerformed()
+        {
+            _currentUnitMoving++;
+            MovePerformed?.Invoke();
+        }
+
+        public void OnMovePerformed()
+        {
+            MovePerformed?.Invoke();
+        }
+        
         public bool HasAnyMoves()
         {
             if (_currentUnitMoving > units.Count)
