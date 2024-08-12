@@ -38,7 +38,7 @@ namespace _Scripts.Units
                 if (distance < min)
                 {
                     min = distance;
-                    closestUnit = unit;
+                    closestUnit = otherUnit;
                 }
             }
 

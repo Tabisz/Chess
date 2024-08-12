@@ -31,13 +31,9 @@ namespace _Scripts.Units
         {
             if(TurnController.CurrentTurnProvider.GetName() != GetName())
                 return;
-        
-            if(_currentlySelectedUnit!= null)
-                if (TryAttackUnit(_currentlySelectedUnit, unit))
-                {
-                   // _currentlySelectedUnit = null;
-                    MovePerformed?.Invoke();
-                }
+
+            if (_currentlySelectedUnit != null)
+                TryAttackUnit(_currentlySelectedUnit, unit);
         }
 
         private void OnEmptyTileSelected(Tile tile)
@@ -49,13 +45,9 @@ namespace _Scripts.Units
         {
             if(TurnController.CurrentTurnProvider.GetName() != GetName())
                 return;
-        
+
             if (_currentlySelectedUnit != null)
-                if (TryMoveUnit(_currentlySelectedUnit, tile))
-                {
-                    //_currentlySelectedUnit = null;
-                    MovePerformed?.Invoke();                
-                }
+                TryMoveUnit(_currentlySelectedUnit, tile);
         }
 
         private void OnMovePerformed()
@@ -64,11 +56,13 @@ namespace _Scripts.Units
             {
                 GridManager.ShowRangesForUnit(_currentlySelectedUnit);
                 
-                if ( !_currentlySelectedUnit.CanPerformMove() && (!_currentlySelectedUnit.CanPerformAttack() || !GetOppositeUnitInAttackRange(_currentlySelectedUnit)))
+                if (!_currentlySelectedUnit.CanPerformAttack() || !GetOppositeUnitInAttackRange(_currentlySelectedUnit))
                     _currentlySelectedUnit.SetSleeping();
             }
             else
                 GridManager.RefreshGrid();
+            
+            MovePerformed?.Invoke();                
         }
     
         private bool TryMoveUnit(Unit unit, Tile tile)
@@ -111,7 +105,9 @@ namespace _Scripts.Units
 
             foreach (var unit in units)
             {
-                if ( unit.CanPerformMove() || (unit.CanPerformAttack() && GetOppositeUnitInAttackRange(unit)))
+                if (unit.CanPerformMove())
+                    return true;
+                if (unit.CanPerformAttack()&& GetOppositeUnitInAttackRange(unit))
                     return true;
             }
             return false;

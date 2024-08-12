@@ -16,5 +16,5 @@ MonoBehaviour:
   _dmg: 25
   _attackRange: 3
   _moveRange: 4
-  _attackSpeed: 0.2
-  _moveSpeed: 1
+  _attackSpeed: 10
+  _moveSpeed: 8

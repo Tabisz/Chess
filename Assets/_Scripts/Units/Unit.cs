@@ -59,7 +59,10 @@ namespace _Scripts.Units
 
         public bool CanPerformMove()
         {
-            return !_attackPerformed && !_movePerformed;
+            if (_attackPerformed)
+                return false;
+            
+            return !_movePerformed;
         }
         
         public Fraction GetOppositeFraction()
@@ -107,21 +110,30 @@ namespace _Scripts.Units
             if(_currentTile != null)
                 _currentTile.UnregisterOccupier();
         
-            StartCoroutine(SmoothLerp(statistics.MoveSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(tile), onPerformed));
+            StartCoroutine(SmoothLerp(statistics.MoveSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(tile),
+                () =>
+                {
+                    _currentTile = tile;
+                    _movePerformed = true;
+                    if(tile.CurrentTileOccipier == null)
+                        tile.RegisterOccupier(this);
+                    onPerformed?.Invoke();
+                }));
 
-            _currentTile = tile;//TODO: move this to on performed function because it is firing to early
-            _movePerformed = true;
-            if(tile.CurrentTileOccipier == null)
-                tile.RegisterOccupier(this);
+
         }
     
     
         public void Attack( Unit unit, Action onPerformed = null)
         {
-            Debug.Log("ATTACK!!");
-            StartCoroutine(SmoothLerpPingPong(statistics.AttackSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(unit.CurrentTile), onPerformed ));
-            unit.ReceiveDamage(statistics.Dmg);//TODO: move this to on performed function because it is firing to early
-            _attackPerformed = true;
+            StartCoroutine(SmoothLerpPingPong(statistics.AttackSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(unit.CurrentTile),
+                () =>
+                {
+                    unit.ReceiveDamage(statistics.Dmg);
+                    _attackPerformed = true;
+                    onPerformed?.Invoke();
+                }));
+
         }
         private void ReceiveDamage(int damageCount)
         {
