@@ -22,9 +22,9 @@ namespace _Scripts.Units
 
         private void SpawnPlayerStartingUnits()// might move starting player army to global config
         {
-            SpawnUnit(_gridManager.GetRandomFreeTile(), Fraction.PLAYER, UnitType.TANK, false);
+           // SpawnUnit(_gridManager.GetRandomFreeTile(), Fraction.PLAYER, UnitType.TANK, false);
             SpawnUnit(_gridManager.GetRandomFreeTile(), Fraction.PLAYER, UnitType.ARCHER, false);
-            SpawnUnit(_gridManager.GetRandomFreeTile(), Fraction.PLAYER, UnitType.KNIGHT,false);
+           // SpawnUnit(_gridManager.GetRandomFreeTile(), Fraction.PLAYER, UnitType.KNIGHT,false);
         }
 
         private void SpawnEnemyStartingUnits()

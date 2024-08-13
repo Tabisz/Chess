@@ -15,8 +15,8 @@ namespace _Scripts.Units
     {
     
         private UnitsController _unitsController;
-        public UnitStatistics Statistics => statistics;    
-        [SerializeField] private UnitStatistics statistics;
+        public UnitStatistics Statistics => _statistics;    
+        private UnitStatistics _statistics;
     
         public int CurrentHp => _currentHp;
         private int _currentHp;
@@ -26,7 +26,7 @@ namespace _Scripts.Units
 
         public Fraction Fraction => _fraction;
         private Fraction _fraction;
-
+        
         public Tile CurrentTile => _currentTile;
         private Tile _currentTile;
 
@@ -34,15 +34,14 @@ namespace _Scripts.Units
 
         [SerializeField] private GameObject sleepIndicator;
     
-    
         public void Init(UnitsController unitsController, Fraction fraction, UnitStatistics stats, Material graphic, bool disableForNextTurn)
         {
             _unitsController = unitsController;
             _unitsController.RegisterToUnitsController(this);
             _fraction = fraction;
-        
-            statistics = stats;
-            _currentHp = statistics.MaxHp;
+
+            _statistics = Instantiate(stats);
+            _currentHp = _statistics.MaxHp;
         
             myRenderer.material = graphic;
         
@@ -83,6 +82,12 @@ namespace _Scripts.Units
             sleepIndicator.SetActive(true);
         }
 
+        public void LevelUp()
+        {
+            _statistics.LevelUp();
+            _currentHp = Mathf.Clamp(_currentHp + 40, 0, _statistics.MaxHp);
+        }
+
         public void SkipTurn()
         {
             SetSleeping();
@@ -110,7 +115,7 @@ namespace _Scripts.Units
             if(_currentTile != null)
                 _currentTile.UnregisterOccupier();
         
-            StartCoroutine(SmoothLerp(statistics.MoveSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(tile),
+            StartCoroutine(SmoothLerp(_statistics.MoveSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(tile),
                 () =>
                 {
                     _currentTile = tile;
@@ -126,10 +131,10 @@ namespace _Scripts.Units
     
         public void Attack( Unit unit, Action onPerformed = null)
         {
-            StartCoroutine(SmoothLerpPingPong(statistics.AttackSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(unit.CurrentTile),
+            StartCoroutine(SmoothLerpPingPong(_statistics.AttackSpeed,GameController.Instance.GameplayRefsHolder.GridManager.GetPositionOfTile(unit.CurrentTile),
                 () =>
                 {
-                    unit.ReceiveDamage(statistics.Dmg);
+                    unit.ReceiveDamage(_statistics.Dmg);
                     _attackPerformed = true;
                     SetSleeping();
                     onPerformed?.Invoke();

@@ -18,6 +18,7 @@ namespace _Scripts.Units
             Observer.OnUnitSelected += OnUnitSelected;
             Observer.OnUnitSecondarySelected += OnUnitSecondarySelected;
             Observer.OnUnitDied += CheckForGameEnd;
+            Observer.OnUnitDied += LvlUpPlayer;
         
             TurnController.PlayerRegisterTurnProvider(this);
         }
@@ -129,6 +130,13 @@ namespace _Scripts.Units
             if(unit.Fraction == Fraction.PLAYER)
                 if(units.Count == 0)
                     Observer.OnGameLost?.Invoke();
+        }
+        
+        private void LvlUpPlayer(Unit unit)
+        {
+            if(unit.Fraction != Fraction.ENEMY)
+                return;
+            units[0].LevelUp();
         }
     
         public void Deinit()

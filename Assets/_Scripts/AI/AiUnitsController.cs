@@ -14,7 +14,7 @@ namespace _Scripts.AI
             base.Init();
             TurnController.AiRegisterTurnProvider(this);
             
-            Observer.OnUnitDied += CheckForGameWin;
+            //Observer.OnUnitDied += CheckForGameWin;
 
         }
 
@@ -36,7 +36,7 @@ namespace _Scripts.AI
         {
             if (units.Count <= _currentUnitMoving)
             {
-                EndMyTurn();
+                MovePerformed?.Invoke();
                 return;                
             }
 

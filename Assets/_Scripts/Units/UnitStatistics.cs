@@ -28,6 +28,12 @@ namespace _Scripts.Units
         [SerializeField]
         private float _moveSpeed;
         public float MoveSpeed => _moveSpeed;
+        
+        public void LevelUp()
+        {
+            _moveRange++;
+            _dmg += 10;
+        }
     
     }
 }
