@@ -21,7 +21,15 @@ namespace _Scripts.AI
         public void StartMyTurn()
         {
             _currentUnitMoving = 0;
-            Observer.OnNextMoveRequested += MoveOneUnit;
+            if (true)
+            {
+                MovePerformed += MoveOneUnit;
+                MoveOneUnit();
+            }
+            else
+            {
+                Observer.OnNextMoveRequested += MoveOneUnit;
+            }
         }
 
         private void MoveOneUnit()
@@ -106,6 +114,7 @@ namespace _Scripts.AI
             }
 
             Observer.OnNextMoveRequested -= MoveOneUnit;
+            MovePerformed -= MoveOneUnit;
         }
 
         public string GetName()
