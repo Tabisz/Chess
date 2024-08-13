@@ -86,14 +86,14 @@ namespace _Scripts.Turns
         {
             if (_currentTurnProvider == null)
             {
-                _currentTurn++;// as player goes always first. Increment turn count here
-                return _playerTurnProvider;//at start when provider is null
+                _currentTurn++;
+                return _playerTurnProvider;
             }
 
             if (_currentTurnProvider.GetName() == _aiTurnProvider.GetName())
             {
-                _currentTurn++;// as player goes always first. Increment turn count here
-                _enemyTurnsToSpawning--;//also enemy turn has ended
+                _currentTurn++;
+                _enemyTurnsToSpawning--;
                 return _playerTurnProvider;
             }
 

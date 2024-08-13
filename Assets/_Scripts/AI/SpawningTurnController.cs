@@ -14,14 +14,8 @@ namespace _Scripts.AI
         private DropZoneMarker[] _dropZoneMarkerPool;
         public void Init()
         {
-            var enemyCount = GameController.Instance.GlobalStatistics.GetDifficultyPackage(
-                GameController.Instance.RuntimeDataHolder.CurrentDifficultySetting).EnemyCount;
-        
             GameController.Instance.GameplayRefsHolder.TurnController.SpawningRegisterTurnProvider(this);
             _getReadyPhase = true;
-
-            _dropZoneMarkerPool = CreateDropZoneMarkersPool(enemyCount);
-
         }
 
         private DropZoneMarker[] CreateDropZoneMarkersPool(int poolCount)
@@ -42,6 +36,8 @@ namespace _Scripts.AI
         {
             if (_getReadyPhase)
             {
+                var enemyCount = GameController.Instance.GameplayRefsHolder.TurnController.CurrentTurn / 3 + 1;
+                _dropZoneMarkerPool = CreateDropZoneMarkersPool(enemyCount);
                 ActivateMarkers();
             }
             else
