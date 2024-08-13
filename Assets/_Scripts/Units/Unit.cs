@@ -131,6 +131,7 @@ namespace _Scripts.Units
                 {
                     unit.ReceiveDamage(statistics.Dmg);
                     _attackPerformed = true;
+                    SetSleeping();
                     onPerformed?.Invoke();
                 }));
 

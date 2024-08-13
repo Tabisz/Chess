@@ -34,6 +34,12 @@ namespace _Scripts.AI
 
         private void MoveOneUnit()
         {
+            if (units.Count <= _currentUnitMoving)
+            {
+                EndMyTurn();
+                return;                
+            }
+
             var unit = units[_currentUnitMoving];
 
             if (unit.CanPerformAttack() && TryAttackIfInRange(unit)) //try to attack
